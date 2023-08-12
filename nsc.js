@@ -19,7 +19,7 @@ function Song6() {
 function Song7() {
   document.getElementById("song").innerHTML = "<audio src='song7.mp3' autoplay></audio>";
 }
-var radius = 250; // how big of the radius
+var radius = 350; // how big of the radius
 var autoRotate = true; // auto rotate or not
 var rotateSpeed = -60; // unit: seconds/360 degrees
 var imgWidth = 170; // width of images (unit: px)
