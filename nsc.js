@@ -19,11 +19,11 @@ function Song6() {
 function Song7() {
   document.getElementById("song").innerHTML = "<audio src='song7.mp3' autoplay></audio>";
 }
-var radius = 240; // how big of the radius
+var radius = 270; // how big of the radius
 var autoRotate = true; // auto rotate or not
 var rotateSpeed = -60; // unit: seconds/360 degrees
-var imgWidth = 120; // width of images (unit: px)
-var imgHeight = 170; // height of images (unit: px)
+var imgWidth = 170; // width of images (unit: px)
+var imgHeight = 230; // height of images (unit: px)
 
 
 setTimeout(init, 1000);
@@ -44,9 +44,9 @@ ground.style.height = radius * 3 + "px";
 
 function init(delayTime) {
   for (var i = 0; i < aEle.length; i++) {
-      aEle[i].style.transform = "rotateY(" + (i * (360 / aEle.length)) + "deg) translateZ(" + radius + "px)";
-      aEle[i].style.transition = "transform 1s";
-      aEle[i].style.transitionDelay = delayTime || (aEle.length - i) / 4 + "s";
+    aEle[i].style.transform = "rotateY(" + (i * (360 / aEle.length)) + "deg) translateZ(" + radius + "px)";
+    aEle[i].style.transition = "transform 1s";
+    aEle[i].style.transitionDelay = delayTime || (aEle.length - i) / 4 + "s";
   }
 }
 
@@ -78,37 +78,120 @@ document.onpointerdown = function (e) {
   clearInterval(odrag.timer);
   e = e || window.event;
   var sX = e.clientX,
-      sY = e.clientY;
+    sY = e.clientY;
 
   this.onpointermove = function (e) {
-      e = e || window.event;
-      var nX = e.clientX,
-          nY = e.clientY;
-      desX = nX - sX;
-      desY = nY - sY;
-      tX += desX * 0.1;
-      tY += desY * 0.1;
-      applyTranform(odrag);
-      sX = nX;
-      sY = nY;
+    e = e || window.event;
+    var nX = e.clientX,
+      nY = e.clientY;
+    desX = nX - sX;
+    desY = nY - sY;
+    tX += desX * 0.1;
+    tY += desY * 0.1;
+    applyTranform(odrag);
+    sX = nX;
+    sY = nY;
   };
 
   this.onpointerup = function (e) {
-      odrag.timer = setInterval(function () {
-          desX *= 0.95;
-          desY *= 0.95;
-          tX += desX * 0.1;
-          tY += desY * 0.1;
-          applyTranform(odrag);
-          playSpin(false);
-          if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
-              clearInterval(odrag.timer);
-              playSpin(true);
-          }
-      }, 17);
-      this.onpointermove = this.onpointerup = null;
+    odrag.timer = setInterval(function () {
+      desX *= 0.95;
+      desY *= 0.95;
+      tX += desX * 0.1;
+      tY += desY * 0.1;
+      applyTranform(odrag);
+      playSpin(false);
+      if (Math.abs(desX) < 0.5 && Math.abs(desY) < 0.5) {
+        clearInterval(odrag.timer);
+        playSpin(true);
+      }
+    }, 10);
+    this.onpointermove = this.onpointerup = null;
   };
 
   return false;
 };
 
+function FireShot() {
+  const count = 200,
+    defaults = {
+      origin: { y: 0.7 },
+    };
+
+  function fire(particleRatio, opts) {
+    confetti(
+      Object.assign({}, defaults, opts, {
+        particleCount: Math.floor(count * particleRatio),
+      })
+    );
+  }
+
+  fire(0.25, {
+    spread: 26,
+    startVelocity: 55,
+  });
+
+  fire(0.2, {
+    spread: 60,
+  });
+
+  fire(0.35, {
+    spread: 100,
+    decay: 0.91,
+    scalar: 0.8,
+  });
+
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 25,
+    decay: 0.92,
+    scalar: 1.2,
+  });
+
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 45,
+  });
+
+}
+
+function sideFireShot() {
+  const end = Date.now() + 15 * 1000;
+
+  // go Buckeyes!
+  const colors = ["#bb0000", "#ffffff"];
+
+  (function frame() {
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 },
+      colors: colors,
+    });
+
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 },
+      colors: colors,
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}
+
+setTimeout(() => {
+  sideFireShot()
+}, 500);
+
+setTimeout(() => {
+  FireShot()
+}, 1000);
+
+setInterval(() => {
+  FireShot()
+}, 5000);
